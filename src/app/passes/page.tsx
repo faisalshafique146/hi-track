@@ -33,6 +33,11 @@ export default function PassesPage() {
             (error) => {
                 setGeoError(`Unable to retrieve your location: ${error.message}`);
                 setLoading(false);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
             }
         );
     };
@@ -58,9 +63,14 @@ export default function PassesPage() {
                         <p className="text-muted-foreground max-w-md">
                             Allow access to your location to see when the ISS will pass overhead.
                         </p>
-                        <Button onClick={getLocation} disabled={loading} size="lg">
+                        <Button
+                            onClick={getLocation}
+                            disabled={loading}
+                            size="lg"
+                            className="bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 hover:from-blue-700 hover:via-cyan-600 hover:to-teal-500 text-white shadow-lg shadow-cyan-500/25 active:scale-95 transition-all duration-300 font-bold tracking-wide rounded-full px-8 h-12 border-none"
+                        >
                             {loading ? "Locating..." : "Find My Location"}
-                            <MapPin className="ml-2 h-4 w-4" />
+                            <MapPin className="ml-2 h-5 w-5 animate-bounce" />
                         </Button>
                         {geoError && <p className="text-destructive mt-2">{geoError}</p>}
                     </div>
