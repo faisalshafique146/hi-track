@@ -6,7 +6,7 @@ import * as satellite from "satellite.js";
 export async function getAstronauts(): Promise<AstronautsResponse> {
     // Using open-notify http API via server to avoid mixed content
     try {
-        const res = await fetch("http://api.open-notify.org/astros.json", {
+        const res = await fetch(process.env.NEXT_PUBLIC_ASTROS_API_URL!, {
             next: { revalidate: 3600 }, // Cache for 1 hour
         });
         if (!res.ok) throw new Error("Failed to fetch astronauts");
@@ -20,7 +20,7 @@ export async function getAstronauts(): Promise<AstronautsResponse> {
 export async function getISSPasses(lat: number, lon: number): Promise<ISSPassPromise | null> {
     try {
         // 1. Fetch latest TLE data from CelesTrak
-        const tleRes = await fetch("https://celestrak.org/NORAD/elements/gp.php?CATNR=25544&FORMAT=TLE", {
+        const tleRes = await fetch(process.env.NEXT_PUBLIC_CELESTRAK_TLE_URL!, {
             next: { revalidate: 3600 } // Cache TLE for 1 hour
         });
 
@@ -62,7 +62,7 @@ export async function getISSPasses(lat: number, lon: number): Promise<ISSPassPro
             const positionAndVelocity = satellite.propagate(satRec, currentTime);
             const gmst = satellite.gstime(currentTime);
 
-            if (positionAndVelocity.position && typeof positionAndVelocity.position !== 'boolean') {
+            if (positionAndVelocity && positionAndVelocity.position && typeof positionAndVelocity.position !== 'boolean') {
                 const positionEcf = satellite.eciToEcf(positionAndVelocity.position as satellite.EciVec3<number>, gmst);
                 const lookAngles = satellite.ecfToLookAngles(observerGd, positionEcf);
 
