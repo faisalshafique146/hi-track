@@ -63,7 +63,7 @@ export function Header() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.2 }}
-                        className="md:hidden absolute top-16 left-0 w-full border-b border-primary/20 bg-linear-to-b from-background via-background to-primary/5 shadow-2xl p-4"
+                        className="md:hidden absolute top-16 left-0 w-full border-b border-primary/20 bg-linear-to-b from-background via-background to-primary/5 shadow-2xl p-4 bg-black/80"
                     >
                         <nav className="flex flex-col gap-4">
                             {navItems.map((item) => (
