@@ -112,3 +112,32 @@ export async function getISSPasses(lat: number, lon: number): Promise<ISSPassPro
         return null;
     }
 }
+
+export async function getLocationName(lat: number, lon: number): Promise<string | null> {
+    try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`, {
+            headers: {
+                'User-Agent': 'Hi-Track-ISS-Tracker/1.0'
+            },
+            next: { revalidate: 86400 } // Cache for 24 hours
+        });
+
+        if (!res.ok) return null;
+
+        const data = await res.json();
+
+        // Try to get the most relevant name
+        const address = data.address;
+        if (!address) return null;
+
+        const city = address.city || address.town || address.village || address.hamlet;
+        const state = address.state || address.region;
+        const country = address.country;
+
+        const parts = [city, state, country].filter(Boolean);
+        return parts.length > 0 ? parts.join(", ") : null;
+    } catch (error) {
+        console.error("Error fetching location name:", error);
+        return null;
+    }
+}

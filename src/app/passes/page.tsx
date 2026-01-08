@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button"; // Correct Case
-import { getISSPasses } from "@/app/actions"; // Server Action
+import { getISSPasses, getLocationName } from "@/app/actions"; // Server Action
 import { ISSPassPromise } from "@/lib/types";
 import { GlassCard } from "@/components/shared/GlassCard";
 import { MapPin, Clock, Calendar } from "lucide-react";
@@ -15,6 +15,7 @@ export default function PassesPage() {
     const [loading, setLoading] = useState(false);
     const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
     const [passes, setPasses] = useState<ISSPassPromise | null>(null);
+    const [locationName, setLocationName] = useState<string | null>(null);
 
     const getLocation = () => {
         if (!navigator.geolocation) {
@@ -36,7 +37,7 @@ export default function PassesPage() {
             },
             {
                 enableHighAccuracy: true,
-                timeout: 5000,
+                timeout: 30000,
                 maximumAge: 0
             }
         );
@@ -45,8 +46,14 @@ export default function PassesPage() {
     useEffect(() => {
         if (coords) {
             setLoading(true);
-            getISSPasses(coords.lat, coords.lon).then(data => {
-                setPasses(data);
+
+            // Parallel data fetching
+            Promise.all([
+                getISSPasses(coords.lat, coords.lon),
+                getLocationName(coords.lat, coords.lon)
+            ]).then(([passesData, locName]) => {
+                setPasses(passesData);
+                setLocationName(locName);
                 setLoading(false);
             });
         }
@@ -67,7 +74,7 @@ export default function PassesPage() {
                             onClick={getLocation}
                             disabled={loading}
                             size="lg"
-                            className="bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 hover:from-blue-700 hover:via-cyan-600 hover:to-teal-500 text-white shadow-lg shadow-cyan-500/25 active:scale-95 transition-all duration-300 font-bold tracking-wide rounded-full px-8 h-12 border-none"
+                            className="cursor-pointer bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 hover:from-blue-700 hover:via-cyan-600 hover:to-teal-500 text-white shadow-lg shadow-cyan-500/25 active:scale-95 transition-all duration-300 font-bold tracking-wide rounded-full px-8 h-12 border-none"
                         >
                             {loading ? "Locating..." : "Find My Location"}
                             <MapPin className="ml-2 h-5 w-5 animate-bounce" />
@@ -79,7 +86,9 @@ export default function PassesPage() {
                 {coords && passes && (
                     <div className="w-full max-w-2xl mt-8 space-y-4">
                         <div className="text-sm text-muted-foreground text-center mb-4">
-                            Prediction for <span className="font-mono text-primary">{coords.lat.toFixed(4)}, {coords.lon.toFixed(4)}</span>
+                            Prediction for <span className="font-mono text-primary">
+                                {locationName ? locationName : `${coords.lat.toFixed(4)}, ${coords.lon.toFixed(4)}`}
+                            </span>
                         </div>
                         {passes.response.map((pass, idx) => (
                             <GlassCard key={idx} className="p-4 flex justify-between items-center">
