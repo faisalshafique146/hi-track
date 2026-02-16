@@ -16,7 +16,7 @@ export function HeroSection() {
     return (
         <section className="relative w-full py-8 space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-end gap-4">
-                <div>
+                <div className="w-full">
                     <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-gradient">
                         ISS Tracker Live
                     </h1>

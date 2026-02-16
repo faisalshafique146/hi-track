@@ -6,9 +6,9 @@ import { PageTransition } from "@/components/layout/PageTransition";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col font-sans">
+    <div className="flex container m-auto min-h-screen flex-col font-sans">
       <Header />
-      <PageTransition className="flex-1 container py-6 space-y-8 px-4">
+      <PageTransition className="flex-1 py-6 space-y-8 px-4">
         <HeroSection />
         <StatsGrid />
       </PageTransition>
