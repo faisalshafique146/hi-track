@@ -7,12 +7,15 @@ import {
   Marker,
   Popup,
   Polyline,
+  Circle,
   useMap,
 } from "react-leaflet";
 import L from "leaflet";
 import { useISSPosition } from "@/hooks/use-iss";
 import { Skeleton } from "@/components/ui/skeleton";
 import "leaflet/dist/leaflet.css";
+
+const EARTH_RADIUS_KM = 6371;
 
 // Function to update map center smoothly
 function MapController({ coords }: { coords: [number, number] }) {
@@ -69,6 +72,10 @@ export default function ISSMap() {
   }
 
   const center: [number, number] = [position.latitude, position.longitude];
+  const footprintRadiusMeters = getVisibilityRadiusMeters(
+    position.altitude,
+    position.footprint,
+  );
 
   return (
     <div className="relative z-0 h-full min-h-[320px] w-full overflow-hidden rounded-xl border border-white/10 shadow-2xl sm:min-h-[400px]">
@@ -83,12 +90,24 @@ export default function ISSMap() {
           attribution='Hi-track'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
+        <Circle
+          center={center}
+          radius={footprintRadiusMeters}
+          pathOptions={{
+            color: "#38bdf8",
+            weight: 2,
+            opacity: 0.85,
+            fillColor: "#60a5fa",
+            fillOpacity: 0.18,
+          }}
+        />
         <Marker position={center} icon={issIcon}>
           <Popup>
             <div className="text-black">
               <h3 className="font-bold">ISS Location</h3>
               <p>Alt: {position.altitude.toFixed(2)} km</p>
               <p>Vel: {position.velocity.toFixed(2)} km/h</p>
+              <p>View radius: {(footprintRadiusMeters / 1000).toFixed(0)} km</p>
             </div>
           </Popup>
         </Marker>
@@ -100,4 +119,15 @@ export default function ISSMap() {
       </MapContainer>
     </div>
   );
+}
+
+function getVisibilityRadiusMeters(altitudeKm: number, footprintKm?: number) {
+  if (typeof footprintKm === "number" && Number.isFinite(footprintKm) && footprintKm > 0) {
+    // The API footprint is the full visible width, so the map circle needs the radius.
+    return (footprintKm / 2) * 1000;
+  }
+
+  // Fallback to the geometric horizon distance along Earth's surface.
+  const centralAngle = Math.acos(EARTH_RADIUS_KM / (EARTH_RADIUS_KM + altitudeKm));
+  return EARTH_RADIUS_KM * centralAngle * 1000;
 }
