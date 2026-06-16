@@ -12,20 +12,20 @@ export default async function AstronautsPage() {
     return (
         <div className="flex min-h-screen flex-col font-sans">
             <Header />
-            <PageTransition className="flex-1 container py-8 px-4">
-                <h1 className="text-3xl font-bold mb-6">Humans in Space ({data.number})</h1>
+            <PageTransition className="container mx-auto flex-1 px-4 py-8 sm:px-6 lg:px-8">
+                <h1 className="mb-6 text-3xl font-bold sm:text-4xl">Humans in Space ({data.number})</h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
                     {data.people.map((person, i) => (
-                        <GlassCard key={`${person.name}-${i}`} className="p-6 flex items-start gap-4">
-                            <div className="bg-primary/20 p-3 rounded-full">
-                                <User className="h-6 w-6 text-primary" />
+                        <GlassCard key={`${person.name}-${i}`} className="flex items-start gap-4 p-5 sm:p-6">
+                            <div className="rounded-full bg-primary/20 p-3">
+                                <User className="h-5 w-5 text-primary sm:h-6 sm:w-6" />
                             </div>
-                            <div>
-                                <h3 className="text-xl font-semibold">{person.name}</h3>
-                                <div className="flex items-center gap-2 text-muted-foreground mt-1">
+                            <div className="min-w-0">
+                                <h3 className="text-lg font-semibold sm:text-xl">{person.name}</h3>
+                                <div className="mt-1 flex items-center gap-2 text-muted-foreground">
                                     <Rocket className="h-4 w-4" />
-                                    <span className="text-sm">{person.craft}</span>
+                                    <span className="text-sm break-words">{person.craft}</span>
                                 </div>
                             </div>
                         </GlassCard>

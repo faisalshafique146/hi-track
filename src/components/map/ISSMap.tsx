@@ -71,12 +71,12 @@ export default function ISSMap() {
   const center: [number, number] = [position.latitude, position.longitude];
 
   return (
-    <div className="relative w-full h-full min-h-[400px] rounded-xl overflow-hidden shadow-2xl border border-white/10 z-0">
+    <div className="relative z-0 h-full min-h-[320px] w-full overflow-hidden rounded-xl border border-white/10 shadow-2xl sm:min-h-[400px]">
       <MapContainer
         center={center}
         zoom={3}
         scrollWheelZoom={true}
-        className="w-full h-full min-h-[400px]"
+        className="h-full min-h-[320px] w-full sm:min-h-[400px]"
         style={{ background: "#0a0a0a" }}
       >
         <TileLayer

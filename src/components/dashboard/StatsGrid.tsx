@@ -2,7 +2,7 @@
 
 import { useISSPosition } from "@/hooks/use-iss";
 import { GlassCard } from "@/components/shared/GlassCard";
-import { Activity, ArrowUp, Navigation, RefreshCw } from "lucide-react";
+import { Activity, ArrowUp, Navigation } from "lucide-react";
 
 export function StatsGrid() {
     const { position } = useISSPosition();
@@ -37,12 +37,12 @@ export function StatsGrid() {
     ];
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {stats.map((stat) => (
-                <GlassCard key={stat.label} className="p-4 flex flex-col items-center justify-center text-center">
-                    <stat.icon className={`h-8 w-8 mb-2 ${stat.color}`} />
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider">{stat.label}</p>
-                    <p className="text-xl font-bold font-mono">{stat.value}</p>
+                <GlassCard key={stat.label} className="flex min-h-32 flex-col items-center justify-center p-5 text-center sm:min-h-36">
+                    <stat.icon className={`mb-3 h-8 w-8 ${stat.color}`} />
+                    <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground sm:text-xs">{stat.label}</p>
+                    <p className="mt-2 break-words text-lg font-bold font-mono sm:text-xl">{stat.value}</p>
                 </GlassCard>
             ))}
         </div>

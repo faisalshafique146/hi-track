@@ -12,14 +12,13 @@ const ISSMap = dynamic(() => import("@/components/map/ISSMap"), {
 
 export default function MapPage() {
     return (
-        <div className="flex h-screen flex-col">
+        <div className="flex min-h-screen flex-col">
             <Header />
-            <PageTransition className="flex-1 relative z-0">
-                <div className="absolute inset-0">
+            <PageTransition className="relative z-0 flex-1 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
+                <div className="absolute inset-4 sm:inset-6 lg:inset-8">
                     <ISSMap />
                 </div>
-                {/* Overlay controls could go here */}
-                <div className="absolute top-4 right-4 z-[400] bg-black/50 backdrop-blur p-2 rounded text-xs text-white">
+                <div className="absolute left-6 top-6 z-[400] rounded-full bg-black/50 px-3 py-2 text-[11px] uppercase tracking-[0.22em] text-white backdrop-blur sm:left-8 sm:top-8 sm:text-xs">
                     Real-time Tracking
                 </div>
             </PageTransition>

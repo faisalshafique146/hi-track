@@ -62,12 +62,12 @@ export default function PassesPage() {
     return (
         <div className="flex min-h-screen flex-col font-sans">
             <Header />
-            <PageTransition className="flex-1 container py-8 px-4 flex flex-col items-center">
-                <h1 className="text-3xl font-bold mb-6 text-center">ISS Pass Predictions</h1>
+            <PageTransition className="container mx-auto flex flex-1 flex-col items-center px-4 py-8 sm:px-6 lg:px-8">
+                <h1 className="mb-6 text-center text-3xl font-bold sm:text-4xl">ISS Pass Predictions</h1>
 
                 {!coords && (
-                    <div className="text-center space-y-4">
-                        <p className="text-muted-foreground max-w-md">
+                    <div className="w-full max-w-lg space-y-4 text-center">
+                        <p className="mx-auto max-w-md text-sm leading-6 text-muted-foreground sm:text-base">
                             Allow access to your location to see when the ISS will pass overhead.
                         </p>
                         <Button
@@ -84,36 +84,36 @@ export default function PassesPage() {
                 )}
 
                 {coords && passes && (
-                    <div className="w-full max-w-2xl mt-8 space-y-4">
-                        <div className="text-sm text-muted-foreground text-center mb-4">
+                    <div className="mt-8 w-full max-w-3xl space-y-4">
+                        <div className="mb-4 text-center text-sm text-muted-foreground">
                             Prediction for <span className="font-mono text-primary">
                                 {locationName ? locationName : `${coords.lat.toFixed(4)}, ${coords.lon.toFixed(4)}`}
                             </span>
                         </div>
                         {passes.response.map((pass, idx) => (
-                            <GlassCard key={idx} className="p-4 flex justify-between items-center">
-                                <div className="flex items-center gap-4">
-                                    <div className="bg-primary/20 p-2 rounded text-primary">
+                            <GlassCard key={idx} className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+                                <div className="flex items-center gap-3 sm:gap-4">
+                                    <div className="rounded text-primary bg-primary/20 p-2">
                                         <Calendar className="h-5 w-5" />
                                     </div>
-                                    <div>
+                                    <div className="min-w-0">
                                         <p className="font-semibold">{new Date(pass.risetime * 1000).toLocaleDateString()}</p>
-                                        <p className="text-xs text-muted-foreground">{new Date(pass.risetime * 1000).toLocaleTimeString()}</p>
+                                        <p className="text-xs text-muted-foreground sm:text-sm">{new Date(pass.risetime * 1000).toLocaleTimeString()}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-4 text-right">
+                                <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4 text-left sm:justify-end sm:border-t-0 sm:pt-0 sm:text-right">
                                     <div>
-                                        <p className="font-semibold text-lg">{Math.floor(pass.duration / 60)}m {pass.duration % 60}s</p>
+                                        <p className="text-lg font-semibold">{Math.floor(pass.duration / 60)}m {pass.duration % 60}s</p>
                                         <p className="text-xs text-muted-foreground">Duration</p>
                                     </div>
-                                    <Clock className="h-5 w-5 text-muted-foreground" />
+                                    <Clock className="h-5 w-5 shrink-0 text-muted-foreground" />
                                 </div>
                             </GlassCard>
                         ))}
                     </div>
                 )}
 
-                {coords && loading && <p className="animate-pulse mt-8">Calculating orbital passes...</p>}
+                {coords && loading && <p className="mt-8 animate-pulse text-center">Calculating orbital passes...</p>}
 
             </PageTransition>
             <Footer />
