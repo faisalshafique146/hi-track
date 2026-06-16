@@ -34,13 +34,16 @@ export function Header() {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                "text-sm font-medium transition-colors hover:text-primary",
+                                "relative px-1 py-2 text-sm font-medium transition-colors hover:text-cyan-200",
                                 pathname === item.href
-                                    ? "text-foreground"
+                                    ? "text-cyan-200"
                                     : "text-muted-foreground"
                             )}
                         >
                             {item.name}
+                            {pathname === item.href && (
+                                <span className="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-cyan-300" />
+                            )}
                         </Link>
                     ))}
                 </nav>
@@ -83,9 +86,9 @@ export function Header() {
                                             key={item.href}
                                             href={item.href}
                                             className={cn(
-                                                "block border-b border-white/8 py-4 text-lg font-medium tracking-wide transition-colors duration-200",
+                                                "block rounded-xl border-b border-white/8 px-3 py-4 text-lg font-medium tracking-wide transition-colors duration-200",
                                                 pathname === item.href
-                                                    ? "text-cyan-200"
+                                                    ? "bg-cyan-300/10 text-cyan-200"
                                                     : "text-slate-200 hover:text-white",
                                                 index === navItems.length - 1 && "border-b-0 pb-2"
                                             )}
