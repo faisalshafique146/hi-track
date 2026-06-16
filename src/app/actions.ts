@@ -4,9 +4,16 @@ import { AstronautsResponse, ISSPassPromise } from "@/lib/types";
 import * as satellite from "satellite.js";
 
 export async function getAstronauts(): Promise<AstronautsResponse> {
-    // Using open-notify http API via server to avoid mixed content
     try {
-        const res = await fetch(process.env.NEXT_PUBLIC_ASTROS_API_URL!, {
+        const astronautsApiUrl =
+            process.env.ASTROS_API_URL ?? process.env.NEXT_PUBLIC_ASTROS_API_URL;
+
+        if (!astronautsApiUrl) {
+            throw new Error("ASTROS_API_URL is not configured");
+        }
+
+        // Use the server as the caller so the browser never hits the HTTP endpoint directly.
+        const res = await fetch(astronautsApiUrl, {
             next: { revalidate: 3600 }, // Cache for 1 hour
         });
         if (!res.ok) throw new Error("Failed to fetch astronauts");
@@ -19,8 +26,15 @@ export async function getAstronauts(): Promise<AstronautsResponse> {
 
 export async function getISSPasses(lat: number, lon: number): Promise<ISSPassPromise | null> {
     try {
+        const celestrakTleUrl =
+            process.env.CELESTRAK_TLE_URL ?? process.env.NEXT_PUBLIC_CELESTRAK_TLE_URL;
+
+        if (!celestrakTleUrl) {
+            throw new Error("CELESTRAK_TLE_URL is not configured");
+        }
+
         // 1. Fetch latest TLE data from CelesTrak
-        const tleRes = await fetch(process.env.NEXT_PUBLIC_CELESTRAK_TLE_URL!, {
+        const tleRes = await fetch(celestrakTleUrl, {
             next: { revalidate: 3600 } // Cache TLE for 1 hour
         });
 
