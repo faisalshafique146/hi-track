@@ -16,6 +16,7 @@ import { MapSkeleton } from "@/components/map/MapSkeleton";
 import "leaflet/dist/leaflet.css";
 
 const EARTH_RADIUS_KM = 6371;
+const GROUND_OBSERVER_MIN_ELEVATION_DEG = 10;
 
 // Function to update map center smoothly
 function MapController({ coords }: { coords: [number, number] }) {
@@ -72,10 +73,7 @@ export default function ISSMap() {
   }
 
   const center: [number, number] = [position.latitude, position.longitude];
-  const footprintRadiusMeters = getVisibilityRadiusMeters(
-    position.altitude,
-    position.footprint,
-  );
+  const visibilityRadiusMeters = getVisibilityRadiusMeters(position.altitude);
 
   return (
     <div className="relative z-0 h-full min-h-[320px] w-full overflow-hidden rounded-xl border border-white/10 shadow-2xl sm:min-h-[400px]">
@@ -92,7 +90,7 @@ export default function ISSMap() {
         />
         <Circle
           center={center}
-          radius={footprintRadiusMeters}
+          radius={visibilityRadiusMeters}
           pathOptions={{
             color: "#38bdf8",
             weight: 2,
@@ -107,7 +105,8 @@ export default function ISSMap() {
               <h3 className="font-bold">ISS Location</h3>
               <p>Alt: {position.altitude.toFixed(2)} km</p>
               <p>Vel: {position.velocity.toFixed(2)} km/h</p>
-              <p>View radius: {(footprintRadiusMeters / 1000).toFixed(0)} km</p>
+              <p>Ground visibility radius: {(visibilityRadiusMeters / 1000).toFixed(0)} km</p>
+              <p>Ground observer min elevation: {GROUND_OBSERVER_MIN_ELEVATION_DEG} deg</p>
             </div>
           </Popup>
         </Marker>
@@ -121,13 +120,23 @@ export default function ISSMap() {
   );
 }
 
-function getVisibilityRadiusMeters(altitudeKm: number, footprintKm?: number) {
-  if (typeof footprintKm === "number" && Number.isFinite(footprintKm) && footprintKm > 0) {
-    // The API footprint is the full visible width, so the map circle needs the radius.
-    return (footprintKm / 2) * 1000;
-  }
+function getVisibilityRadiusMeters(altitudeKm: number) {
+  const orbitalRadiusKm = EARTH_RADIUS_KM + altitudeKm;
+  const minElevationRad = degreesToRadians(GROUND_OBSERVER_MIN_ELEVATION_DEG);
+  const radiusRatio = EARTH_RADIUS_KM / orbitalRadiusKm;
 
-  // Fallback to the geometric horizon distance along Earth's surface.
-  const centralAngle = Math.acos(EARTH_RADIUS_KM / (EARTH_RADIUS_KM + altitudeKm));
+  // This models a person standing on Earth's surface looking upward.
+  // The radius is the ground area where the ISS is at least the chosen
+  // elevation above the local horizon, not just barely line-of-sight.
+  const cosineTerm = radiusRatio * Math.cos(minElevationRad) ** 2;
+  const sineTerm =
+    Math.sin(minElevationRad) *
+    Math.sqrt(1 - radiusRatio ** 2 * Math.cos(minElevationRad) ** 2);
+  const centralAngle = Math.acos(cosineTerm + sineTerm);
+
   return EARTH_RADIUS_KM * centralAngle * 1000;
+}
+
+function degreesToRadians(degrees: number) {
+  return (degrees * Math.PI) / 180;
 }
