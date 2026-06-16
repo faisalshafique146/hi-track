@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { getISSPasses, getLocationName } from "@/app/actions";
 import { ISSPassPromise } from "@/lib/types";
 import { GlassCard } from "@/components/shared/GlassCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
     Calendar,
     Clock3,
@@ -148,18 +149,28 @@ export default function PassesPage() {
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                                    <MetricCard
-                                        label="Next rise"
-                                        value={nextPass ? formatTime(nextPass.risetime) : loading ? "Calculating" : "--"}
-                                    />
-                                    <MetricCard
-                                        label="Pass count"
-                                        value={passes ? String(totalPasses) : loading ? "..." : "--"}
-                                    />
-                                    <MetricCard
-                                        label="Longest pass"
-                                        value={longestPass ? formatDuration(longestPass.duration) : loading ? "..." : "--"}
-                                    />
+                                    {loading && coords ? (
+                                        <>
+                                            <MetricCardSkeleton />
+                                            <MetricCardSkeleton />
+                                            <MetricCardSkeleton />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <MetricCard
+                                                label="Next rise"
+                                                value={nextPass ? formatTime(nextPass.risetime) : "--"}
+                                            />
+                                            <MetricCard
+                                                label="Pass count"
+                                                value={passes ? String(totalPasses) : "--"}
+                                            />
+                                            <MetricCard
+                                                label="Longest pass"
+                                                value={longestPass ? formatDuration(longestPass.duration) : "--"}
+                                            />
+                                        </>
+                                    )}
                                 </div>
 
                                 <p className="text-sm leading-6 text-slate-400">
@@ -187,12 +198,26 @@ export default function PassesPage() {
                         </div>
 
                         {loading && coords && (
-                            <GlassCard className="rounded-[24px] p-6">
-                                <div className="flex items-center gap-3 text-slate-300">
-                                    <Radar className="h-5 w-5 animate-pulse text-cyan-300" />
-                                    <p className="text-sm sm:text-base">Calculating orbital passes for your location...</p>
-                                </div>
-                            </GlassCard>
+                            <div className="space-y-4">
+                                {Array.from({ length: 3 }).map((_, index) => (
+                                    <GlassCard key={index} className="rounded-[24px] p-5 sm:p-6">
+                                        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                                            <div className="flex items-start gap-4">
+                                                <Skeleton className="h-12 w-12 rounded-2xl" />
+                                                <div className="space-y-3">
+                                                    <Skeleton className="h-5 w-20 rounded-full" />
+                                                    <Skeleton className="h-8 w-36" />
+                                                    <Skeleton className="h-4 w-52" />
+                                                </div>
+                                            </div>
+                                            <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
+                                                <Skeleton className="h-24 rounded-2xl" />
+                                                <Skeleton className="h-24 rounded-2xl" />
+                                            </div>
+                                        </div>
+                                    </GlassCard>
+                                ))}
+                            </div>
                         )}
 
                         {!loading && passes && totalPasses > 0 && (
@@ -313,6 +338,15 @@ function MetricCard({ label, value }: { label: string; value: string }) {
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
             <p className="text-[11px] uppercase tracking-[0.24em] text-slate-400">{label}</p>
             <p className="mt-2 text-lg font-semibold text-white">{value}</p>
+        </div>
+    );
+}
+
+function MetricCardSkeleton() {
+    return (
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="mt-3 h-7 w-24" />
         </div>
     );
 }

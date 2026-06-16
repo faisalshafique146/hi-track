@@ -2,12 +2,25 @@
 
 import { useISSPosition } from "@/hooks/use-iss";
 import { GlassCard } from "@/components/shared/GlassCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Activity, ArrowUp, Navigation } from "lucide-react";
 
 export function StatsGrid() {
-    const { position } = useISSPosition();
+    const { position, isLoading } = useISSPosition();
 
-    if (!position) return null;
+    if (isLoading || !position) {
+        return (
+            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {Array.from({ length: 4 }).map((_, index) => (
+                    <GlassCard key={index} className="flex min-h-32 flex-col items-center justify-center p-5 sm:min-h-36">
+                        <Skeleton className="mb-3 h-8 w-8 rounded-full" />
+                        <Skeleton className="h-3 w-20" />
+                        <Skeleton className="mt-3 h-6 w-24" />
+                    </GlassCard>
+                ))}
+            </div>
+        );
+    }
 
     const stats = [
         {

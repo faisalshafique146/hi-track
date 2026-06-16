@@ -111,6 +111,26 @@
 }
 
 @layer utilities {
+  @keyframes skeleton-flash {
+    0%, 100% {
+      opacity: 0.45;
+      filter: brightness(0.9);
+    }
+
+    50% {
+      opacity: 1;
+      filter: brightness(1.2);
+    }
+  }
+
+  .skeleton-flash {
+    background:
+      linear-gradient(110deg, rgba(71, 85, 105, 0.22) 8%, rgba(125, 211, 252, 0.32) 18%, rgba(71, 85, 105, 0.22) 33%),
+      rgba(30, 41, 59, 0.72);
+    background-size: 220% 100%;
+    animation: skeleton-flash 1.35s ease-in-out infinite;
+  }
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500;
   }

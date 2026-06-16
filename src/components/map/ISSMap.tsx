@@ -12,7 +12,7 @@ import {
 } from "react-leaflet";
 import L from "leaflet";
 import { useISSPosition } from "@/hooks/use-iss";
-import { Skeleton } from "@/components/ui/skeleton";
+import { MapSkeleton } from "@/components/map/MapSkeleton";
 import "leaflet/dist/leaflet.css";
 
 const EARTH_RADIUS_KM = 6371;
@@ -60,7 +60,7 @@ export default function ISSMap() {
   }, [position]);
 
   if (isLoading && !position) {
-    return <Skeleton className="w-full h-[400px] rounded-xl" />;
+    return <MapSkeleton />;
   }
 
   if (isError || !position) {
