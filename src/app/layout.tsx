@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ISS Satellite Tracker",
+  title: "Hi Track",
   description: "Real-time tracking of the International Space Station",
 };
 

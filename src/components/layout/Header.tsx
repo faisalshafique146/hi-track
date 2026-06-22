@@ -25,7 +25,7 @@ export function Header() {
             <div className="container mx-auto flex h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
                 <Link href="/" className="flex min-w-0 items-center gap-2 text-lg font-bold tracking-tight sm:text-xl">
                     <Satellite className="h-5 w-5 shrink-0 animate-pulse text-primary sm:h-6 sm:w-6" />
-                    <span className="truncate">Hi<span className="ml-1 font-extrabold text-gradient">Tracker</span></span>
+                    <span className="truncate">Hi<span className="ml-1 font-extrabold text-gradient">Track</span></span>
                 </Link>
 
                 <nav className="hidden items-center gap-4 lg:flex xl:gap-6">
