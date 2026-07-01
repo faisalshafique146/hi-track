@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"; // Correct import for App Router
 import { Satellite, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const navItems = [
     { name: "Home", href: "/" },
@@ -19,6 +19,38 @@ import { motion, AnimatePresence } from "framer-motion"; // Add this import
 export function Header() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        if (!isOpen) {
+            return;
+        }
+
+        const scrollY = window.scrollY;
+        const originalBodyOverflow = document.body.style.overflow;
+        const originalBodyPosition = document.body.style.position;
+        const originalBodyTop = document.body.style.top;
+        const originalBodyWidth = document.body.style.width;
+        const originalHtmlOverflow = document.documentElement.style.overflow;
+
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+        document.body.style.position = "fixed";
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = "100%";
+
+        return () => {
+            document.documentElement.style.overflow = originalHtmlOverflow;
+            document.body.style.overflow = originalBodyOverflow;
+            document.body.style.position = originalBodyPosition;
+            document.body.style.top = originalBodyTop;
+            document.body.style.width = originalBodyWidth;
+            window.scrollTo(0, scrollY);
+        };
+    }, [isOpen]);
+
+    useEffect(() => {
+        setIsOpen(false);
+    }, [pathname]);
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background/60 backdrop-blur-xl supports-backdrop-filter:bg-background/60">
