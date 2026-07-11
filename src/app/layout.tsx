@@ -29,6 +29,22 @@ export const metadata: Metadata = {
   creator: siteConfig.name,
   publisher: siteConfig.name,
   category: "science",
+  icons: [
+    {
+      rel: "icon",
+      url: "/icon-light.svg",
+      media: "(prefers-color-scheme: light)",
+    },
+    {
+      rel: "icon",
+      url: "/icon-dark.svg",
+      media: "(prefers-color-scheme: dark)",
+    },
+    {
+      rel: "icon",
+      url: "/icon-light.svg",
+    },
+  ],
   alternates: {
     canonical: "/",
   },
@@ -85,3 +101,6 @@ export default function RootLayout({
     </html>
   );
 }
+
+
+
