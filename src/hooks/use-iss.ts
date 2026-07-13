@@ -7,7 +7,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function useISSPosition() {
     const { data, error, isLoading } = useSWR<ISSPosition>(
-        process.env.NEXT_PUBLIC_ISS_API_URL,
+        "/api/iss-position",
         fetcher,
         {
             refreshInterval: 3000,
