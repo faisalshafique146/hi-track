@@ -32,17 +32,25 @@ export const metadata: Metadata = {
   icons: [
     {
       rel: "icon",
+      url: "/favicon.ico",
+      sizes: "any",
+    },
+    {
+      rel: "icon",
       url: "/icon-light.svg",
+      type: "image/svg+xml",
       media: "(prefers-color-scheme: light)",
     },
     {
       rel: "icon",
       url: "/icon-dark.svg",
+      type: "image/svg+xml",
       media: "(prefers-color-scheme: dark)",
     },
     {
       rel: "icon",
       url: "/icon-light.svg",
+      type: "image/svg+xml",
     },
   ],
   alternates: {
@@ -101,6 +109,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-
-
